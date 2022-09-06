@@ -1,0 +1,98 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/manager/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/manager",
+        "index": "apps/manager/src/index.html",
+        "baseHref": "/",
+        "main": "apps/manager/src/main.ts",
+        "polyfills": "apps/manager/src/polyfills.ts",
+        "tsConfig": "apps/manager/tsconfig.app.json",
+        "assets": ["apps/manager/src/favicon.ico", "apps/manager/src/assets"],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "apps/manager/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/manager/src/environments/environment.ts",
+              "with": "apps/manager/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "webpackConfig": "apps/manager/webpack.config.prod.js"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/react:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "manager:build",
+        "hmr": true,
+        "port": 4204
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "manager:build:development"
+        },
+        "production": {
+          "buildTarget": "manager:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/manager/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/manager"],
+      "options": {
+        "jestConfig": "apps/manager/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "manager:build",
+        "port": 4204
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "manager:build:development"
+        },
+        "production": {
+          "buildTarget": "manager:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
